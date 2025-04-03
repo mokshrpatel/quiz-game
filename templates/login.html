@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        a {
+            color: #2196F3;
+            text-decoration: none;
+        }
+        .join-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form action="{{ url_for('login') }}" method="POST">
+        <input type="text" name="username" placeholder="username" required>
+        <input type="password" name="password" placeholder="password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <a href="{{ url_for('signup') }}">Sign up?</a>
+    
+    <div class="join-section">
+        <h3>JOIN QUIZ</h3>
+        <form action="{{ url_for('join_quiz') }}" method="POST">
+            <input type="number" name="quiz_id" placeholder="Quiz ID" required>  <!-- Changed from quiz_code -->
+            <input type="text" name="name" placeholder="Your name" required>
+            <button type="submit">Join Quiz</button>
+        </form>
+    </div>
+</body>
+</html>

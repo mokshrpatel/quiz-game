@@ -1,0 +1,76 @@
+<!-- templates/start_confirmation.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Quiz Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .confirmation-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .participants-list {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .participant-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn-start {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-cancel {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <h1>Start Quiz: {{ quiz.title }}</h1>
+        
+        <div class="participants-list">
+            <h3>Participants Joined:</h3>
+            {% if participants %}
+                {% for participant in participants %}
+                <div class="participant-item">
+                    {{ participant.name }} (Joined at: {{ participant.joined_at }})
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No participants have joined yet.</p>
+            {% endif %}
+        </div>
+        
+        <div class="confirmation-actions">
+            <form method="POST" action="{{ url_for('start_quiz', quiz_id=quiz.id) }}">
+                <button type="submit" class="btn btn-start">Confirm Start</button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

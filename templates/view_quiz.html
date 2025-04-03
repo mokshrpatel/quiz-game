@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="quiz-view">
+        <h1>{{ quiz.q_name }}</h1>
+        
+        <div class="quiz-questions">
+            {% for q_num in range(1, 11) %}
+            <div class="question">
+                <h3>Question {{ q_num }}: {{ quiz['q' ~ q_num] }}</h3>
+                <div class="options">
+                    {% for opt_num in range(1, 5) %}
+                    <div class="option {% if quiz['ans' ~ q_num] == opt_num %}correct{% endif %}">
+                        {{ options['o' ~ ((q_num-1)*4 + opt_num)] }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <a href="{{ url_for('dashboard') }}" class="btn btn-back">Back to Dashboard</a>
+    </div>
+</body>
+</html>
