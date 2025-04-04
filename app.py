@@ -286,11 +286,11 @@ def start_quiz(quiz_id):
             # Verify the quiz belongs to the current user
             verify_query = text("""
                 SELECT 1 FROM question 
-                WHERE q_id = :quiz_id AND user_id = :userid
+                WHERE q_id = :quiz_id AND user_id = :user_id
             """)
             if not connection.execute(verify_query, 
                                    {'quiz_id': quiz_id, 
-                                    'userid': session['user_id']}).fetchone():
+                                    'user_id': session['user_id']}).fetchone():
                 flash('Quiz not found', 'danger')
                 return redirect(url_for('dashboard'))
             
@@ -321,10 +321,10 @@ def host_quiz(quiz_id):
             quiz_query = text("""
                 SELECT q_id as id, q_name as title 
                 FROM question 
-                WHERE q_id = :quiz_id AND user_id = :userid
+                WHERE q_id = :quiz_id AND user_id = :user_id
             """)
             quiz = connection.execute(quiz_query, 
-                                   {'quiz_id': quiz_id, 'userid': session['user_id']}).mappings().first()
+                                   {'quiz_id': quiz_id, 'user_id': session['user_id']}).mappings().first()
             
             if not quiz:
                 flash('Quiz not found', 'danger')
