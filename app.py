@@ -2,7 +2,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from database import engine
 from sqlalchemy import text
-import secrets
 from datetime import datetime, timedelta
 
 app = Flask(__name__)

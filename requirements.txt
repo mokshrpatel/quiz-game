@@ -2,7 +2,6 @@ flask
 pymysql
 sqlalchemy
 gunicorn
-secrets
 datetime
 pyOpenSSL
 cryptography
