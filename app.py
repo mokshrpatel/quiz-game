@@ -5,7 +5,7 @@ from sqlalchemy import text
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = 'dbms'
 
 @app.route('/')
 def index():
@@ -356,69 +356,69 @@ def host_quiz(quiz_id):
         print(f"Database error: {e}")
         return redirect(url_for('dashboard'))
 
-@app.route('/quiz/<int:quiz_id>/participate')
-def participate_quiz(quiz_id):
-    try:
-        with engine.connect() as connection:
-            # Verify quiz exists and is active
-            quiz_query = text("""
-                SELECT q.q_id as id, q.q_name as title, qs.is_active
-                FROM question q
-                LEFT JOIN quiz_sessions qs ON q.q_id = qs.quiz_id
-                WHERE q.q_id = :quiz_id
-            """)
-            quiz = connection.execute(quiz_query, 
-                                   {'quiz_id': quiz_id}).mappings().first()
+# @app.route('/quiz/<int:quiz_id>/participate')
+# def participate_quiz(quiz_id):
+#     try:
+#         with engine.connect() as connection:
+#             # Verify quiz exists and is active
+#             quiz_query = text("""
+#                 SELECT q.q_id as id, q.q_name as title, qs.is_active
+#                 FROM question q
+#                 LEFT JOIN quiz_sessions qs ON q.q_id = qs.quiz_id
+#                 WHERE q.q_id = :quiz_id
+#             """)
+#             quiz = connection.execute(quiz_query, 
+#                                    {'quiz_id': quiz_id}).mappings().first()
             
-            if not quiz:
-                flash('Quiz not found', 'danger')
-                return redirect(url_for('login'))
+#             if not quiz:
+#                 flash('Quiz not found', 'danger')
+#                 return redirect(url_for('login'))
             
-            if not quiz['is_active']:
-                flash('Quiz is not active', 'danger')
-                return redirect(url_for('login'))
+#             if not quiz['is_active']:
+#                 flash('Quiz is not active', 'danger')
+#                 return redirect(url_for('login'))
             
-            # Get current question
-            session_query = text("""
-                SELECT current_question FROM quiz_sessions
-                WHERE quiz_id = :quiz_id
-            """)
-            session_info = connection.execute(session_query, 
-                                           {'quiz_id': quiz_id}).mappings().first()
+#             # Get current question
+#             session_query = text("""
+#                 SELECT current_question FROM quiz_sessions
+#                 WHERE quiz_id = :quiz_id
+#             """)
+#             session_info = connection.execute(session_query, 
+#                                            {'quiz_id': quiz_id}).mappings().first()
             
-            current_question = session_info['current_question'] if session_info else 1
+#             current_question = session_info['current_question'] if session_info else 1
             
-            # Get question and options
-            question_query = text("""
-                SELECT q{q_num} as question, ans{q_num} as correct_answer
-                FROM question
-                WHERE q_id = :quiz_id
-            """.format(q_num=current_question))
-            question = connection.execute(question_query, 
-                                       {'quiz_id': quiz_id}).mappings().first()
+#             # Get question and options
+#             question_query = text("""
+#                 SELECT q{q_num} as question, ans{q_num} as correct_answer
+#                 FROM question
+#                 WHERE q_id = :quiz_id
+#             """.format(q_num=current_question))
+#             question = connection.execute(question_query, 
+#                                        {'quiz_id': quiz_id}).mappings().first()
             
-            options_query = text("""
-                SELECT o{start}, o{start+1}, o{start+2}, o{start+3}
-                FROM options
-                WHERE q_id = :quiz_id
-            """.format(start=(current_question-1)*4 + 1))
-            options = connection.execute(options_query, 
-                                       {'quiz_id': quiz_id}).mappings().first()
+#             options_query = text("""
+#                 SELECT o{start}, o{start+1}, o{start+2}, o{start+3}
+#                 FROM options
+#                 WHERE q_id = :quiz_id
+#             """.format(start=(current_question-1)*4 + 1))
+#             options = connection.execute(options_query, 
+#                                        {'quiz_id': quiz_id}).mappings().first()
             
-            return render_template('participate_quiz.html',
-                                quiz=quiz,
-                                question_num=current_question,
-                                question=question['question'],
-                                options=[options[f'o{(current_question-1)*4 + 1}'],
-                                         options[f'o{(current_question-1)*4 + 2}'],
-                                         options[f'o{(current_question-1)*4 + 3}'],
-                                         options[f'o{(current_question-1)*4 + 4}']],
-                                correct_answer=question['correct_answer'])
+#             return render_template('participate_quiz.html',
+#                                 quiz=quiz,
+#                                 question_num=current_question,
+#                                 question=question['question'],
+#                                 options=[options[f'o{(current_question-1)*4 + 1}'],
+#                                          options[f'o{(current_question-1)*4 + 2}'],
+#                                          options[f'o{(current_question-1)*4 + 3}'],
+#                                          options[f'o{(current_question-1)*4 + 4}']],
+#                                 correct_answer=question['correct_answer'])
             
-    except Exception as e:
-        flash('Error joining quiz', 'danger')
-        print(f"Database error: {e}")
-        return redirect(url_for('login'))
+#     except Exception as e:
+#         flash('Error joining quiz', 'danger')
+#         print(f"Database error: {e}")
+#         return redirect(url_for('login'))
 
 @app.route('/quiz/<int:quiz_id>/next', methods=['POST'])
 def next_question(quiz_id):
@@ -537,31 +537,31 @@ def submit_answer(quiz_id):
         print(f"Database error: {e}")
         return redirect(url_for('login'))
 
-@app.route('/quiz/<int:quiz_id>/scores')
-def show_scores(quiz_id):
-    try:
-        with engine.connect() as connection:
-            # Get total scores for each participant
-            scores_query = text("""
-                SELECT p.name, SUM(pr.score) as total_score
-                FROM participant_responses pr
-                JOIN participants p ON pr.participant_id = p.id
-                JOIN quiz_sessions qs ON pr.session_id = qs.session_id
-                WHERE qs.quiz_id = :quiz_id
-                GROUP BY p.name
-                ORDER BY total_score DESC
-            """)
-            scores = connection.execute(scores_query, 
-                                      {'quiz_id': quiz_id}).mappings().all()
+# @app.route('/quiz/<int:quiz_id>/scores')
+# def show_scores(quiz_id):
+#     try:
+#         with engine.connect() as connection:
+#             # Get total scores for each participant
+#             scores_query = text("""
+#                 SELECT p.name, SUM(pr.score) as total_score
+#                 FROM participant_responses pr
+#                 JOIN participants p ON pr.participant_id = p.id
+#                 JOIN quiz_sessions qs ON pr.session_id = qs.session_id
+#                 WHERE qs.quiz_id = :quiz_id
+#                 GROUP BY p.name
+#                 ORDER BY total_score DESC
+#             """)
+#             scores = connection.execute(scores_query, 
+#                                       {'quiz_id': quiz_id}).mappings().all()
             
-            return render_template('scores.html',
-                                 quiz_id=quiz_id,
-                                 scores=scores)
+#             return render_template('scores.html',
+#                                  quiz_id=quiz_id,
+#                                  scores=scores)
             
-    except Exception as e:
-        flash('Error retrieving scores', 'danger')
-        print(f"Database error: {e}")
-        return redirect(url_for('login'))    
+#     except Exception as e:
+#         flash('Error retrieving scores', 'danger')
+#         print(f"Database error: {e}")
+#         return redirect(url_for('login'))    
 
 @app.route('/logout')
 def logout():

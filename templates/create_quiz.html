@@ -72,13 +72,13 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        
+
         <form method="POST" action="{{ url_for('create_quiz') }}">
             <div class="form-group">
                 <label for="quiz_name">Quiz Name:</label>
                 <input type="text" id="quiz_name" name="quiz_name" required>
             </div>
-            
+
             {% for q_num in range(1, 11) %}
             <div class="form-group">
                 <label for="q{{ q_num }}">Question {{ q_num }}:</label>
@@ -97,4 +97,5 @@
             
             <button type="submit" class="btn-submit">Create Quiz</button>
         </form>
-    </
+    </div>
+<body>
