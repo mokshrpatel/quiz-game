@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Host Quiz</title>
+    <style>
+        .quiz-code {
+            font-size: 3em;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .participants {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        .timer {
+            font-size: 2em;
+            text-align: center;
+        }
+        .question {
+            margin: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option {
+            padding: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hosting Quiz: {{ quiz.title }}</h1>
+    
+    <div class="quiz-code">
+        Quiz Code: {{ quiz.id }}
+    </div>
+    
+    <div class="participants">
+        <h3>Participants:</h3>
+        <ul>
+            {% for participant in participants %}
+            <li>{{ participant.name }} (Joined at: {{ participant.joined_at }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="controls">
+        <form method="POST" action="{{ url_for('next_question', quiz_id=quiz.id) }}">
+            <button type="submit">Next Question</button>
+        </form>
+    </div>
+    
+    <script>
+        // Auto-refresh every 5 seconds
+        setTimeout(function(){
+            location.reload();
+        }, 5000);
+    </script>
+</body>
+</html>

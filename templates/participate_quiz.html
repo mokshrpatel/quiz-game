@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participate in Quiz</title>
+    <style>
+        .quiz-title {
+            text-align: center;
+            font-size: 1.5em;
+        }
+        .question {
+            margin: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .option {
+            padding: 10px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .option:hover {
+            background: #eee;
+        }
+        .timer {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-title">
+        {{ quiz.title }} - Question {{ question_num }}
+    </div>
+    
+    <div class="question">
+        {{ question }}
+    </div>
+    <!-- Add this near the top of participate_quiz.html -->
+    <div class="current-score">
+        Your current score: 
+        {% if request.args.get('current_score') %}
+            {{ request.args.get('current_score') }}
+        {% else %}
+            0
+        {% endif %}
+    </div>
+    <form method="POST" action="{{ url_for('submit_answer', quiz_id=quiz.id) }}">
+        <input type="hidden" name="name" value="{{ request.args.get('name') }}">
+        <div class="options">
+            {% for option in options %}
+            <label class="option">
+                <input type="radio" name="answer" value="{{ loop.index }}" required>
+                {{ option }}
+            </label>
+            {% endfor %}
+        </div>
+        
+        <div class="timer" id="timer">01:00</div>
+        
+        <button type="submit">Submit Answer</button>
+    </form>
+    
+    <script>
+        // 1 minute timer
+        let timeLeft = 60;
+        const timer = document.getElementById('timer');
+        
+        const countdown = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                document.querySelector('form').submit();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

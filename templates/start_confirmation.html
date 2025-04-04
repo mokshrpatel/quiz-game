@@ -65,6 +65,7 @@
             {% endif %}
         </div>
         
+        <!-- In the confirmation actions section -->
         <div class="confirmation-actions">
             <form method="POST" action="{{ url_for('start_quiz', quiz_id=quiz.id) }}">
                 <button type="submit" class="btn btn-start">Confirm Start</button>
